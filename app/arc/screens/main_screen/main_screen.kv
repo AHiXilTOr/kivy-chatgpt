@@ -1,0 +1,382 @@
+#:kivy 2.3.0
+#:import RGBA kivy.utils.rgba
+
+<RenameChat>:
+    opacity: 0
+    size_hint: None, None
+    size: "350dp", "200dp"
+
+    MDBoxLayout:
+        id: rename_content
+        orientation: "vertical"
+        padding: "20dp"
+        spacing: "10dp"
+        md_bg_color: app.theme_cls.backgroundColor
+
+        MDLabel:
+            text: "Изменить название чата"
+
+<MessageLayout>:
+    size_hint_y: None
+    height: copy_label.texture_size[1]
+
+    CopyLabel:
+        id: copy_label
+        font_size: "16.5sp"
+        padding: "10dp"
+        markup: True
+        text: f"[b][size={int(sp(14.5))}]{root.sender}[/size]  [size={int(sp(12.5))}]{root.time}[/size][/b]\n{root.text}"
+        text_size: self.width, None
+        size_hint: 1, None
+        height: self.texture_size[1]
+        color: (0.8941176470588236, 0.8823529411764706, 0.9137254901960784) if app.theme_cls.theme_style == "Dark" else  (0.10588235294117647, 0.10588235294117647, 0.12941176470588237)
+
+        canvas.before:
+            Color:
+                rgba: app.theme_cls.secondaryContainerColor if root.selected else app.theme_cls.backgroundColor
+            RoundedRectangle:
+                size: self.texture_size
+                radius: dp(5), dp(5), dp(5), dp(5)
+                pos: self.pos
+
+        canvas.after:
+            Color:
+                rgba: app.theme_cls.secondaryContainerColor
+            Line:
+                rounded_rectangle: self.pos + self.texture_size + [dp(5)]
+                width: 1.01
+
+<ChatLayout>:
+    md_bg_color: self.theme_cls.secondaryContainerColor if self.selected else self.theme_cls.backgroundColor
+    padding: "10dp", 0, "10dp", 0
+
+    Label:
+        id: chat
+        text: root.name
+        shorten: True
+        shorten_from: "right"
+        text_size: self.width, None
+        font_size: "16sp"
+        color: (0.8941176470588236, 0.8823529411764706, 0.9137254901960784) if app.theme_cls.theme_style == "Dark" else  (0.10588235294117647, 0.10588235294117647, 0.12941176470588237)
+
+    MDIcon:
+        id: chat_button
+        pos_hint: {"center_y": .5}
+        icon: "dots-horizontal"
+
+<ModelLayout>:
+    padding: "10dp", 0
+
+    Label:
+        text: root.text
+        shorten: True
+        shorten_from: "right"
+        text_size: self.width, None
+        font_size: "16sp"
+        color: (0.8941176470588236, 0.8823529411764706, 0.9137254901960784) if app.theme_cls.theme_style == "Dark" else  (0.10588235294117647, 0.10588235294117647, 0.12941176470588237)
+
+
+    MDCheckbox:
+        size_hint: None, None
+        size: dp(48), dp(48)
+        pos_hint: {'center_y': .5}
+        active: root.selected
+
+<ProviderLayout>:
+    padding: "10dp", 0
+
+    Label:
+        text: root.text
+        shorten: True
+        shorten_from: "right"
+        text_size: self.width, None
+        font_size: "16sp"
+        color: (0.8941176470588236, 0.8823529411764706, 0.9137254901960784) if app.theme_cls.theme_style == "Dark" else  (0.10588235294117647, 0.10588235294117647, 0.12941176470588237)
+
+
+    MDCheckbox:
+        size_hint: None, None
+        size: dp(48), dp(48)
+        pos_hint: {'center_y': .5}
+        active: root.selected
+
+<MainScreen>:
+
+    MDNavigationLayout:
+
+        MDScreenManager:
+
+            MDScreen:
+                id: screen
+
+                AdaptiveLayout:
+                    orientation: "vertical"
+
+                    MDTopAppBar:
+                        type: "small"
+                        id: appbar
+
+                        MDTopAppBarLeadingButtonContainer:
+
+                            MDActionTopAppBarButton:
+                                icon: "menu"
+                                on_release: left_nav_drawer.set_state("open")
+
+                        MDTopAppBarTrailingButtonContainer:
+                            
+
+                            MDActionTopAppBarButton:
+                                icon: "lead-pencil"
+                                on_release: root.rename_chat()
+                            
+                            MDActionTopAppBarButton:
+                                icon: "cog"
+                                on_release: root.set_screen("setting_screen")
+                            
+                            MDActionTopAppBarButton:
+                                icon: "information"
+                                on_release: root.set_screen("help_screen")
+
+                            MDActionTopAppBarButton:
+                                icon: "form-select"
+                                on_release: right_nav_drawer.set_state("open")
+
+                        MDTopAppBarTitle:
+                            text: root.active_chat.get("name") if root.active_chat else ""
+
+                    SmartRV:
+                        effect_cls: ScrollEffect
+                        id: message_list
+                        viewclass: 'MessageLayout'
+                        data: root.active_messages
+                        smooth_scroll_end: 10
+
+                        SelectableRecycleBoxLayout:
+                            default_size: None, None
+                            default_size_hint: 1, None
+                            size_hint_y: None
+                            height: self.minimum_height
+                            orientation: 'vertical'
+                            padding: "15dp"
+                            spacing: "10dp"
+                            multiselect: True
+                            touch_multiselect: True
+                    
+                    FloatLayout:
+                        size_hint_y: None
+                        height: 0
+
+                        MDCircularProgressIndicator:
+                            id: loader
+                            size_hint: None, None
+                            size: "32dp", "48dp"
+                            pos_hint: {"center_x": .5, "y": 0}
+                            active: False
+
+                        MDIconButton:
+                            id: refresh
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            icon: "refresh" if len(message_list.layout_manager.selected_nodes) == 1 else "arrow-down-thick" if message_list.height < message_list.layout_manager.height and message_list.scroll_y > 0.01 else ""
+                            pos_hint: {"center_x": .5, "y": 0}
+                            on_release: (Animation(scroll_y=0, t="linear", d=0.5).start(message_list) if (self.icon == "arrow-down-thick") else (root.restart_request_from_selected(message_list) if (self.icon == "refresh") else None))
+                            size: "48dp", "48dp"
+                            theme_font_size: "Custom"
+                            font_size: "32sp"
+                    
+                    BoxStencil:
+                        id: text_input_box
+                        padding: "20dp", 0, "20dp", "20dp"
+                        spacing: "5dp"
+                        size_hint_y: None
+                        height: self.minimum_height
+
+                        TabTextInput:
+                            id: text
+                            enter_action: root.send
+                            multiline: True
+                            height: "60dp"
+                            max_height: "119dp"
+
+                            MDTextFieldMaxLengthText:
+                                max_text_length: 8192
+
+                        MDIconButton:
+                            id: text_button
+                            icon: "trash-can" if message_list.layout_manager.selected_nodes else "send" if root.chatbot_task.done() else "stop"
+                            on_release: root.send(text) if self.icon == "send" else root.stop_response() if self.icon == "stop" else root.delete_selected_items(message_list)       
+
+        MDNavigationDrawer:
+            id: left_nav_drawer
+            radius: 0, dp(16), dp(16), 0
+            enable_swiping: False
+
+            MDNavigationDrawerMenu:
+
+                MDNavigationDrawerItem:
+                    active_indicator_color: self.theme_cls.surfaceContainerLowColor
+                    on_release: root.new_chat("scroll_to_bottom")
+                    radius: dp(5), dp(5), dp(5), dp(5)
+
+                    MDNavigationDrawerItemLeadingIcon:
+                        icon: "playlist-plus"
+
+                    MDNavigationDrawerItemText:
+                        text: "Начать новый чат"
+
+                    MDNavigationDrawerItemTrailingText:
+                        text: str(len(chat_list.data))
+
+                MDNavigationDrawerLabel:
+                    text: "Список чатов:"
+                    padding: 0, "20dp", 0, 0
+
+                BoxLayout:
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: 0, 0, 0, "20dp"
+
+                    Widget:
+                        size_hint_x: None
+                        width: "20dp"
+
+                    SmartRV:
+                        effect_cls: ScrollEffect
+                        id: chat_list
+                        viewclass: 'ChatLayout'
+                        children_height: dp(35)
+                        orientation: 'vertical'
+                        vertical_behavior: "scroll_to_center"
+                        size_hint_y: None
+                        height: "265dp"
+                        data: root.chats
+
+                        SelectableRecycleBoxLayout:
+                            default_size: None, "36dp"
+                            default_size_hint: 1, None
+                            size_hint_y: None
+                            height: self.minimum_height
+                            orientation: 'vertical'
+                            spacing: "10dp"
+                            touch_deselect_last: False
+
+                    Widget:
+                        size_hint_x: None
+                        width: "20dp"
+
+                MDNavigationDrawerItem:
+                    active_indicator_color: self.theme_cls.surfaceContainerLowColor
+                    on_release: root.delete_all()
+                    radius: dp(5), dp(5), dp(5), dp(5)
+
+                    MDNavigationDrawerItemLeadingIcon:
+                        icon: "trash-can"
+
+                    MDNavigationDrawerItemText:
+                        text: "Удалить всё"
+
+        MDNavigationDrawer:
+            id: right_nav_drawer
+            radius: 0, dp(16), dp(16), 0
+            enable_swiping: False
+
+            MDNavigationDrawerMenu:
+
+                FloatLayout:
+                    size_hint_y: None
+                    height: 0
+
+                    MDCircularProgressIndicator:
+                        id: spinner_provider
+                        size_hint: None, None
+                        size: dp(40), dp(40)
+                        x: self.parent.width / 2 - self.width / 2
+                        y: self.parent.parent.height / 2 - self.height / 2
+                        active: False
+                        pos_hint: {"center_x": .5}
+
+                MDTextField:
+                    id: system_prompt
+                    size_hint_y: None
+                    on_focus: root.save_system_prompt()
+                    mode: "filled"
+
+                    MDTextFieldLeadingIcon:
+                        icon: "robot"
+
+                    MDTextFieldHintText:
+                        text: "Системная подсказка"
+
+                MDTabsSecondary:
+
+                    MDTabsItemSecondary:
+                        ripple_effect: False
+
+                        MDTabsItemText:
+                            text: f"Провайдеры {len(root.providers)}"
+
+                    MDTabsItemSecondary:
+                        ripple_effect: False
+
+                        MDTabsItemText:
+                            text: f"Модели {len(root.models)}"
+                    
+                    MDTabsCarousel:
+                        size_hint_y: None
+                        height: "400dp"
+
+                        BoxLayout:
+                            size_hint_y: None
+                            height: self.parent.height
+
+                            Widget:
+                                size_hint_x: None
+                                width: "20dp"
+
+                            RecycleView:
+                                effect_cls: ScrollEffect
+                                id: provider_list
+                                viewclass: 'ProviderLayout'
+                                orientation: 'vertical'
+                                data: root.providers if right_nav_drawer.state == "open" else []
+
+                                SelectableRecycleBoxLayout:
+                                    first_click: False
+                                    default_size: None, "40dp"
+                                    default_size_hint: 1, None
+                                    size_hint_y: None
+                                    height: self.minimum_height
+                                    orientation: 'vertical'
+                                    touch_deselect_last: False
+
+                            Widget:
+                                size_hint_x: None
+                                width: "20dp"
+                
+                        BoxLayout:
+                            size_hint_y: None
+                            height: self.parent.height
+
+                            Widget:
+                                size_hint_x: None
+                                width: "20dp"
+
+                            RecycleView:
+                                effect_cls: ScrollEffect
+                                id: model_list
+                                viewclass: 'ModelLayout'
+                                orientation: 'vertical'
+                                data: root.models if right_nav_drawer.state == "open" else []
+
+                                SelectableRecycleBoxLayout:
+                                    first_click: False
+                                    default_size: None, "40dp"
+                                    default_size_hint: 1, None
+                                    size_hint_y: None
+                                    height: self.minimum_height
+                                    orientation: 'vertical'
+                                    touch_deselect_last: False
+
+                            Widget:
+                                size_hint_x: None
+                                width: "20dp"

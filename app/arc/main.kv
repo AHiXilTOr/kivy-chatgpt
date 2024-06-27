@@ -1,0 +1,63 @@
+#:kivy 2.3.0 
+#:import Animation kivy.animation.Animation
+
+<BaseMDNavigationItem>:
+    ripple_effect: False
+
+    MDNavigationItemIcon:
+        icon: root.icon
+
+MDBoxLayout:
+    orientation: "vertical"
+    md_bg_color: self.theme_cls.backgroundColor
+
+    MDScreenManager:
+        id: screen_manager
+
+        LoginScreen:
+            name: "login_screen"
+
+        RegisterScreen:
+            name: "register_screen"
+
+        VerificationScreen:
+            name: "verification_screen"
+        
+        MainScreen:
+            id: main_screen
+            name: "main_screen"
+
+        HelpScreen:
+            name: "help_screen"
+
+        SettingScreen:
+            name: "setting_screen"
+
+        ProfileScreen:
+            name: "profile_screen"
+
+        SelectScreen:
+            name: "select_screen"
+
+        ChangeScreen:
+            name: "change_screen"
+    
+    AdaptiveLayout:
+        size_hint_y: None
+        height: self.minimum_height
+
+        MDNavigationBar:
+            on_switch_tabs: app.on_switch_tabs(*args)
+            height: "50dp" if screen_manager.current in ["main_screen", "help_screen", "setting_screen", "profile_screen"] else "-50dp"
+
+            BaseMDNavigationItem:
+                icon: "forum"
+                screen: "main_screen"
+                direction: "right"
+                active: True if screen_manager.current == "main_screen" else False
+
+            BaseMDNavigationItem:
+                icon: "folder-account"
+                screen: "profile_screen"
+                direction: "left"
+                active: True if screen_manager.current == "profile_screen" else False

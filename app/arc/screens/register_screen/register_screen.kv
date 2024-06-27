@@ -1,0 +1,109 @@
+#:kivy 2.3.0
+
+<RegisterScreen>:
+    
+    AdaptiveLayout:
+        orientation: "vertical"
+
+        MDTopAppBar:
+            type: "small"
+
+            MDTopAppBarLeadingButtonContainer:
+
+            MDTopAppBarTitle:
+                text: "Регистрация"
+                pos_hint: {"center_x": .5}
+
+        Widget:
+
+        BoxLayout:
+            size_hint_y: None
+            height: self.minimum_height
+            orientation: 'vertical'
+            spacing: "10dp"
+            padding: "10dp", 0
+
+            MDTextField:
+                id: username
+                mode: "filled"
+                required: True
+                theme_bg_color: "Custom"
+                fill_color_normal: 0, 0, 0, 0
+                fill_color_focus: 0, 0, 0, 0
+                
+                MDTextFieldHintText:
+                    text: "Имя пользователя"
+
+            MDTextField:
+                id: email
+                required: True
+                mode: "filled"
+                theme_bg_color: "Custom"
+                fill_color_normal: 0, 0, 0, 0
+                fill_color_focus: 0, 0, 0, 0
+                validator: "email"
+
+                MDTextFieldHintText:
+                    text: "Почта"
+
+            MDTextField:
+                id: password
+                mode: "filled"
+                required: True
+                password: True
+                theme_bg_color: "Custom"
+                fill_color_normal: 0, 0, 0, 0
+                fill_color_focus: 0, 0, 0, 0
+
+                MDTextFieldHintText:
+                    text: "Пароль"
+
+            MDTextField:
+                id: confirm_password
+                mode: "filled"
+                required: True
+                password: True
+                theme_bg_color: "Custom"
+                fill_color_normal: 0, 0, 0, 0
+                fill_color_focus: 0, 0, 0, 0
+
+                MDTextFieldHintText:
+                    text: "Повторный пароль"
+            
+            MDButton:
+                id: register_button
+                pos_hint: {'center_x': 0.5}
+                on_release:  root.register()
+
+                MDButtonText:
+                    text: "Зарегистрироваться"
+            
+            BoxLayout:
+                padding: "5dp", 0, 0, 0
+                size_hint_y: None
+                height: self.minimum_height
+  
+                MDCircularProgressIndicator:
+                    id: spinner
+                    size_hint: None, None
+                    size: dp(20), dp(20)
+                    active: False
+                    pos_hint: {"center_y": 0.5}
+
+                MDLabel:
+                    id: error
+                    text: "Примечание: без почты нельзя восстановить пароль"
+                    adaptive_height: True
+                    markup: True
+                    padding: "5dp", 0, "15dp", 0
+                    text: " "
+
+            MDButton:
+                id: screen_button
+                on_release:  root.set_screen("login_screen")
+                pos_hint: {'right': 0.99}
+
+                MDButtonText:
+                    text: "Перейти к входу"
+
+        Widget:

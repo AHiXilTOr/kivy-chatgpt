@@ -1,0 +1,30 @@
+#:kivy 2.3.0
+
+<HelpScreen>:
+    
+    AdaptiveLayout:
+        orientation: "vertical"
+            
+        MDTopAppBar:
+            type: "small"
+
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "arrow-left"
+                    on_release: root.set_screen("main_screen")
+
+            MDTopAppBarTitle:
+                text: "По вопросам"
+                pos_hint: {"center_x": .5}
+            
+        ScrollView:
+
+            MDLabel:
+                size_hint_y: None
+                height: self.texture_size[1]
+                padding: "10dp", "10dp", "10dp", "10dp"
+                text_size: self.size
+                valign: "top"
+                markup: True
+                text: "    GPT (Generative Pre-trained Transformer) - это семейство моделей искусственного интеллекта, спроектированных для генерации текста на основе предварительного обучения. Приложение подключено к нескольким моделям GPT, включая OpenAI GPT-3.5 Turbo и другие.\n\n    Используемые модели GPT:\n        1. ChatGPT\n        2. Gemini\n        3. Claude\n        4. LlaMa\n        5. Mistral\n\n    Если у вас возникли вопросы или проблемы, обратитесь в службу поддержки.\n\n    Поддержка: [b]kynvi.staff@gmail.com[/b]"

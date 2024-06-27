@@ -1,0 +1,92 @@
+#:kivy 2.3.0
+
+<LoginScreen>:
+    
+    AdaptiveLayout:
+        orientation: "vertical"
+
+        MDTopAppBar:
+            type: "small"
+
+            MDTopAppBarLeadingButtonContainer:
+
+            MDTopAppBarTitle:
+                text: "Авторизация"
+                pos_hint: {"center_x": .5}
+
+        Widget:
+
+        BoxLayout:
+            size_hint_y: None
+            height: self.minimum_height
+            orientation: 'vertical'
+            spacing: "10dp"
+            padding: "10dp", 0
+
+            MDTextField:
+                id: username_or_email
+                mode: "filled"
+                required: True
+                theme_bg_color: "Custom"
+                fill_color_normal: 0, 0, 0, 0
+                fill_color_focus: 0, 0, 0, 0
+                
+                MDTextFieldHintText:
+                    text: "Имя / Почта"
+
+            MDTextField:
+                id: password
+                mode: "filled"
+                required: True
+                password: True
+                theme_bg_color: "Custom"
+                fill_color_normal: 0, 0, 0, 0
+                fill_color_focus: 0, 0, 0, 0
+
+                MDTextFieldHintText:
+                    text: "Пароль"
+            
+            MDButton:
+                id: login_button
+                pos_hint: {'center_x': 0.5}
+                on_release:  root.login()
+
+                MDButtonText:
+                    text: "Войти"
+            
+            BoxLayout:
+                size_hint_y: None
+                height: self.minimum_height
+                padding: "5dp", 0, 0, 0
+  
+                MDCircularProgressIndicator:
+                    id: spinner
+                    size_hint: None, None
+                    size: dp(20), dp(20)
+                    active: False
+                    pos_hint: {"center_y": 0.5}
+
+                MDLabel:
+                    id: error
+                    text: " "
+                    adaptive_height: True
+                    markup: True
+                    padding: "5dp", 0, "15dp", 0
+
+            MDButton:
+                id: screen_button
+                on_release:  root.set_screen("register_screen")
+                pos_hint: {'right': 0.99}
+
+                MDButtonText:
+                    text: "Перейти к регистрации"
+            
+            MDButton:
+                id: reset_button
+                on_release:  root.set_screen("select_screen")
+                pos_hint: {"right": .99}
+
+                MDButtonText:
+                    text: "Сбросить пароль"
+
+        Widget:

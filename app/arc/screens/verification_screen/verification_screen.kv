@@ -1,0 +1,73 @@
+#:kivy 2.3.0
+
+<VerificationScreen>:
+    
+    AdaptiveLayout:
+        orientation: "vertical"
+
+        MDTopAppBar:
+            type: "small"
+
+            MDTopAppBarLeadingButtonContainer:
+
+            MDTopAppBarTitle:
+                text: "Верификация"
+                pos_hint: {"center_x": .5}
+
+        Widget:
+
+        BoxLayout:
+            size_hint_y: None
+            height: self.minimum_height
+            orientation: 'vertical'
+            spacing: "10dp"
+            padding: "10dp", 0
+
+            MDTextField:
+                id: code
+                mode: "filled"
+                required: True
+                theme_bg_color: "Custom"
+                fill_color_normal: 0, 0, 0, 0
+                fill_color_focus: 0, 0, 0, 0
+                
+                MDTextFieldHintText:
+                    text: "Код"
+
+            MDButton:
+                id: verification_button
+                pos_hint: {'center_x': 0.5}
+                on_release: root.verification()
+
+                MDButtonText:
+                    text: "Подтвердить"
+            
+            BoxLayout:
+                padding: "5dp", 0, 0, 0
+                size_hint_y: None
+                height: self.minimum_height
+  
+                MDCircularProgressIndicator:
+                    id: spinner
+                    size_hint: None, None
+                    size: dp(20), dp(20)
+                    active: False
+                    pos_hint: {"center_y": 0.5}
+
+                MDLabel:
+                    id: error
+                    text: "Примечание: на Вашу почту был выслан код"
+                    adaptive_height: True
+                    markup: True
+                    padding: "5dp", 0, "15dp", 0
+                    text: "Примечание: на Вашу почту был выслан код"
+            
+            MDButton:
+                id: back_button
+                on_release: root.set_screen("login_screen")
+                pos_hint: {'right': 0.99}
+
+                MDButtonText:
+                    text: "Отмена"
+
+        Widget:

@@ -1,0 +1,236 @@
+#:kivy 2.3.0
+
+<CustomLabel@Label>:
+    adaptive_height: True
+    font_size: "18sp"
+    size_hint_y: None if self.adaptive_height else 1
+    height: self.texture_size[1]
+    text_size: self.width, None
+    color: 0, 0, 0, 1
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 1
+        Line:
+            points: self.x - dp(10), self.y - dp(5), self.right + dp(10), self.y - dp(5)
+            width: 1
+
+<Info>:
+    background: "#111111"
+    padding: "20dp"
+    
+    ScrollView:
+        effect_cls: ScrollEffect
+
+        BoxLayout:
+            size_hint_y: None
+            height: self.minimum_height
+            orientation: "vertical"
+            spacing: "20dp"
+
+            Label:
+                id: info
+                size_hint_y: None
+                text_size: self.width, None
+                height: self.texture_size[1]
+                markup: True
+                color: 0, 0, 0, 1
+
+            Button: 
+                text: "Закрыть"
+                size_hint: None, None
+                size: self.texture_size
+                on_release: root.dismiss()
+                padding: "10dp"
+
+<SettingScreen>:
+    
+    AdaptiveLayout:
+        orientation: "vertical"
+
+        MDTopAppBar:
+            type: "small"
+
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "arrow-left"
+                    on_release: root.set_screen("main_screen")
+
+            MDTopAppBarTitle:
+                text: "Настройки"
+                pos_hint: {"center_x": .5}
+
+        ScrollView:
+            effect_cls: ScrollEffect
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: "30dp"
+                padding: "10dp"
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: "10dp"
+
+                    MDLabel:
+                        text: "ОФОРМЛЕНИЕ"
+                        bold: True
+                        adaptive_height: True
+                        halign: "right"
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: "10dp"
+
+                        MDLabel:
+                            text: "Тёмная тема"
+                            bold: True
+                            halign: "right"
+                    
+                        MDSwitch:
+                            pos_hint: {'center_y': .5}
+                            icon_active: "check"
+                            icon_inactive: "close"
+                            active: True if app.dark == "Dark" else False
+                            on_active: root.dark(self.active)
+                    
+                    BoxLayout:
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: "10dp"
+
+                        MDLabel:
+                            text: "Цветовая схема ({})".format(self.theme_cls.primary_palette)
+                            bold: True
+                            halign: "right"
+
+                        MDIconButton:
+                            on_release: root.scheme(self)
+                            icon: "cog"
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: "10dp"
+
+                        MDLabel:
+                            text: "Вид цветовой схемы ({})".format(self.theme_cls.dynamic_scheme_name)
+                            bold: True
+                            halign: "right"
+
+                        MDIconButton:
+                            on_release: root.scheme_type(self)
+                            icon: "cog"
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: "10dp"
+                    
+                    MDLabel:
+                        text: "[b]ЧАТ[/b]"
+                        adaptive_height: True
+                        halign: "right"
+                        markup: True
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: "10dp"
+
+                        MDLabel:
+                            text: "Потоковая передача"
+                            bold: True
+                            halign: "right"
+
+                        MDSwitch:
+                            pos_hint: {'center_y': .5}
+                            icon_active: "check"
+                            icon_inactive: "close"
+                            active: app.stream
+                            on_active: root.stream(self.active)   
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: "10dp"
+
+                        MDLabel:
+                            text: "Поддерживать диалог"
+                            bold: True
+                            halign: "right"
+
+                        MDSwitch:
+                            pos_hint: {'center_y': .5}
+                            icon_active: "check"
+                            icon_inactive: "close"
+                            active: app.mean
+                            on_active: root.mean(self.active) 
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: self.minimum_height
+                        orientation: "vertical"
+
+                        MDLabel:
+                            text: "Температура ответа"
+                            bold: True
+                            halign: "left"
+
+                        CustomSlider:
+                            step: 1
+                            min: 0
+                            max: 100
+                            value: app.temperature
+                            on_value: root.temperature(self.value) 
+
+                            MDSliderHandle:
+
+                            MDSliderValueLabel:
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: "10dp"
+                    
+                    MDLabel:
+                        text: "ПРОЧЕЕ"
+                        bold: True
+                        adaptive_height: True
+                        halign: "right"
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: "10dp"
+
+                        MDLabel:
+                            text: "Показать FPS"
+                            bold: True
+                            halign: "right"
+
+                        MDSwitch:
+                            pos_hint: {'center_y': .5}
+                            on_active: root.fps(self.active)
+                            icon_active: "check"
+                            icon_inactive: "close" 
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: self.minimum_height
+
+                        Widget:
+
+                        MDButton:
+                            style: "filled"
+                            on_release: root.environment()
+
+                            MDButtonText:
+                                text: "О приложении"    

@@ -1,0 +1,19 @@
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          workdir: app
+          buildozer_version: master
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: ${{ steps.buildozer.outputs.filename }}

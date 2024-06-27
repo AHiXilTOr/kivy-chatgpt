@@ -1,0 +1,102 @@
+#:kivy 2.3.0
+#:import MDListItem kivymd.uix.list
+#:import ScrollEffect kivy.effects.scroll.ScrollEffect
+
+<IconItem@MDListItem>:
+    icon: ""
+    label_text: ""
+    ripple_effect: False
+
+    MDListItemLeadingIcon:
+        icon: root.icon
+        theme_font_size: "Custom"
+        font_size: "32sp"
+
+    MDListItemSupportingText:
+        text: root.label_text
+        role: "large"
+
+<ProfileScreen>:
+    
+    AdaptiveLayout:
+        orientation: "vertical"
+
+        MDTopAppBar:
+            type: "small"
+
+            MDTopAppBarLeadingButtonContainer:
+
+            MDTopAppBarTitle:
+                text: "Аккаунт"
+
+            MDTopAppBarTrailingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "logout"
+                    on_release: root.logout()
+
+        ScrollView:
+            effect_cls: ScrollEffect
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+
+                IconItem:
+                    label_text: f"Имя: {app.username}"
+                    icon: "account-box"
+
+                IconItem:
+                    label_text: f"Почта: {app.email}"
+                    icon: "gmail"
+
+                BoxLayout:
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: "20dp", "20dp", 0, 0
+
+                    MDButton:
+                        id: save
+                        on_release: root.save()
+                        style: "elevated"
+
+                        MDButtonIcon:
+                            icon: "content-save"
+                        
+                        MDButtonText:
+                            text: "Сохранить данные" 
+
+                BoxLayout:
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: "20dp", "20dp", 0, 0
+
+                    MDButton:
+                        id: load
+                        on_release: root.load()
+                        style: "elevated"
+
+                        MDButtonIcon:
+                            icon: "file-upload-outline"
+                        
+                        MDButtonText:
+                            text: "Выгрузить данные" 
+
+                BoxLayout:
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: "20dp", "20dp", 0, 0
+
+                    MDCircularProgressIndicator:
+                        id: spinner
+                        size_hint: None, None
+                        size: dp(20), dp(20)
+                        active: False
+
+                    MDLabel:
+                        adaptive_height: True
+                        markup: True
+                        id: error
+                        padding: "10dp", 0, 0, 0
+                        text: " "

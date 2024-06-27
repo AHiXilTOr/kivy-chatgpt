@@ -1,0 +1,8 @@
+dist/
+build/
+.venv/
+.idea/
+.vscode/
+__pycache__/
+server/
+version.py
