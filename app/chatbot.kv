@@ -1,0 +1,54 @@
+#:kivy 2.2.1
+
+<INFO>:
+    MDBoxLayout:
+        id: double_layout
+        orientation: "vertical"
+        size_hint_x: (None, 1)[app.platform == 'desktop']
+        width: (root.width, dp(600))[app.platform == 'desktop']
+        pos_hint: {"center_x": 0.5}
+
+        MDTopAppBar:
+            title: "Пояснение"
+            left_action_items: [['arrow-left-bold', lambda x: app.set_screen("main", "right")]]
+            elevation: 0
+
+        MDBoxLayout:
+            orientation: "vertical"
+            padding: "16dp"
+
+            MDLabel:
+                text: "GPT (Generative Pre-trained Transformer) - это семейство моделей искусственного интеллекта, спроектированных для генерации текста на основе предварительного обучения. Приложение подключено к нескольким моделям GPT, включая OpenAI GPT-3.5 Turbo и другие."
+
+        MDCard:
+            orientation: "vertical"
+            padding: "16dp"
+            radius: 0
+
+            MDLabel:
+                text: "Используемые модели GPT:"
+                font_style: "Subtitle1"
+                theme_text_color: "Secondary"
+
+            MDLabel:
+                text: "1. GPT-3.5"
+
+            MDLabel:
+                text: "2. GPT-4"
+
+            MDLabel:
+                text: "3. Claude"
+
+            MDLabel:
+                text: "4. Llama"
+
+        MDCard:
+            orientation: "vertical"
+            padding: "16dp"
+            radius: 0
+            
+            MDLabel:
+                text: "Убедитесь, что все модели настроены правильно, к некоторым нужен токен для доступа."
+
+            MDLabel:
+                text: "Если у вас возникли вопросы или проблемы, обратитесь в службу поддержки."
