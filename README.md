@@ -1,4 +1,4 @@
-## Kynvi
+## Kynvi ![status](https://img.shields.io/uptimerobot/status/m797189051-c9c82425b2010468a0aeb552?style=flat-square)
 
 RuStore: https://www.rustore.ru/catalog/app/com.kynvi.kynvi
 
